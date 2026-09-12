@@ -1144,14 +1144,14 @@
   @media (min-width: 768px) {
     .layout {
       display: flex;
-      gap: 16px;
+      gap: 12px;
       align-items: flex-start;
     }
     .days-sidebar {
-      flex: 0 0 220px;
+      flex: 0 0 150px;
       position: sticky;
-      top: calc(env(safe-area-inset-top, 0px) + 100px);
-      max-height: calc(100vh - 150px);
+      top: calc(env(safe-area-inset-top, 0px) + 96px);
+      max-height: calc(100vh - 140px);
       overflow-y: auto;
       padding-bottom: 8px;
       scrollbar-width: none;
@@ -1165,23 +1165,45 @@
       flex-direction: column;
       flex-wrap: nowrap;
       justify-content: flex-start;
-      gap: 5px;
-      margin: 12px 0 0 0;
+      gap: 3px;
+      margin: 8px 0 0 0;
       padding: 0;
     }
     .day-chip {
       flex-direction: row;
       justify-content: flex-start;
-      gap: 8px;
+      gap: 6px;
       width: 100%;
-      padding: 7px 10px;
+      padding: 4px 8px;
+      border-width: 1px;
+      border-radius: 8px;
       text-align: right;
     }
+    .day-chip .chip-day { font-size: 10px; }
+    .day-chip .chip-num { font-size: 13px; }
     .day-chip .chip-dot {
+      width: 5px;
+      height: 5px;
       margin-inline-start: auto;
     }
+    .day-chip.chip-all .chip-num { font-size: 11px; }
     .month-selectors {
       grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .month-bar {
+      padding: 10px;
+      border-radius: 12px;
+    }
+    .month-bar-label {
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+    .month-selectors select,
+    .month-selectors input {
+      padding: 7px 8px;
+      font-size: 13px;
+      border-radius: 8px;
     }
   }
 
@@ -1244,7 +1266,7 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.2</span></div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.3</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
@@ -2408,12 +2430,22 @@ function goToToday() {
 }
 
 // ========== شريط تنقل الأيام ==========
+const SHORT_DAYS = {
+  'الأحد': 'أحد',
+  'الاثنين': 'اثن',
+  'الثلاثاء': 'ثلا',
+  'الأربعاء': 'أرب',
+  'الخميس': 'خمي',
+  'الجمعة': 'جمع',
+  'السبت': 'سبت'
+};
+
 function renderDayChips() {
   const nav = document.getElementById('daysNav');
   if (!nav) return;
   nav.innerHTML = '<button class="day-chip chip-all" id="chip-all" onclick="viewAll()" aria-label="عرض كل الأيام"><span class="chip-day">عرض</span><span class="chip-num">الكل</span></button>' +
     currentVisits.map((v, i) => {
-      const shortDay = v.day_name.replace('ال', '');
+      const shortDay = SHORT_DAYS[v.day_name] || v.day_name.replace('ال', '');
       return `
         <button class="day-chip" id="chip-${i}" onclick="selectDay(${i})" aria-label="${v.day_name} ${v.date}">
           <span class="chip-day">${shortDay}</span>
@@ -3294,7 +3326,7 @@ function markTodayChip() {
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 
   // تنبيه عند تحديث التطبيق لنسخة جديدة
-  const APP_VERSION = '5.2';
+  const APP_VERSION = '5.3';
   if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
     localStorage.setItem('vr_app_version', APP_VERSION);
     setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
