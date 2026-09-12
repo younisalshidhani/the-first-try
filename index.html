@@ -480,6 +480,43 @@
     font-family: inherit;
   }
   
+  /* ========== شريط الشهر المدمج ========== */
+  .month-bar--inline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .month-bar--inline .month-bar-label {
+    margin-bottom: 0;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .month-bar--inline .month-selectors {
+    flex: 1;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 8px;
+  }
+  .month-bar--inline select,
+  .month-bar--inline input {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  /* ========== حقول جنبًا لجنب ========== */
+  .fields-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .fields-row-2 .field-row { margin-bottom: 0; }
+  .fields-row-2 .field-label { font-size: 11px; }
+  @media (max-width: 480px) {
+    .fields-row-2 { grid-template-columns: 1fr; }
+  }
+
   /* ========== الشريط السفلي ========== */
   .bottom-bar {
     position: fixed;
@@ -1246,22 +1283,6 @@
     }
     .day-chip.chip-all .chip-day { display: none; }
     .day-chip.chip-all .chip-num { font-size: 10px; }
-    .month-selectors {
-      grid-template-columns: 1fr;
-      gap: 5px;
-    }
-    .month-bar {
-      padding: 8px;
-      border-radius: 10px;
-    }
-    .month-bar-label { display: none; }
-    .month-selectors select,
-    .month-selectors input {
-      padding: 6px 4px;
-      font-size: 12px;
-      border-radius: 7px;
-      text-align: center;
-    }
   }
 
   /* ========== إتاحة الوصول وتقليل الحركة ========== */
@@ -1323,7 +1344,7 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.4</span></div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.5</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
@@ -1366,8 +1387,13 @@
   <!-- التخطيط: قائمة الأيام يمينًا والمحتوى يسارًا -->
   <div class="layout">
     <aside class="days-sidebar">
-      <!-- اختيار الشهر -->
-      <div class="month-bar">
+      <!-- قائمة تنقل الأيام -->
+      <div class="days-nav" id="daysNav"></div>
+    </aside>
+
+    <section class="content-area">
+      <!-- اختيار الشهر والسنة -->
+      <div class="month-bar month-bar--inline">
         <div class="month-bar-label">📅 الشهر والسنة</div>
         <div class="month-selectors">
           <select id="monthSelect" onchange="onMonthChange()">
@@ -1388,11 +1414,6 @@
         </div>
       </div>
 
-      <!-- قائمة تنقل الأيام -->
-      <div class="days-nav" id="daysNav"></div>
-    </aside>
-
-    <section class="content-area">
       <!-- الإحصاءات -->
       <div class="stats-strip">
         <div class="stat-pill">
@@ -2303,22 +2324,24 @@ function buildDayCard(v, idx) {
       <div class="day-summary" id="summary-${idx}" onclick="toggleDay(${idx})">${cardSummaryHtml(v)}</div>
       <div class="day-body">
         
-        <div class="field-row">
-          <div class="field-label">🏫 المدرسة المقررة <span class="req">*</span></div>
-          <select class="field-select school-select-planned" onchange="updateVisit(${idx}, 'planned_school', this.value)">
-            ${plannedOptions}
-          </select>
-        </div>
-        
-        <div class="field-row">
-          <div class="field-label">✅ المدرسة المزارة فعلًا</div>
-          <select class="field-select school-select-actual" onchange="onActualSchoolChange(${idx}, this.value)">
-            ${actualOptions}
-          </select>
-          <input type="text" class="field-input" id="actual-other-${idx}" 
-                 placeholder="اكتب اسم المدرسة" 
-                 style="margin-top: 6px; display: none;"
-                 oninput="updateVisit(${idx}, 'actual_school_other', this.value)">
+        <div class="fields-row-2">
+          <div class="field-row">
+            <div class="field-label">🏫 المدرسة المقررة <span class="req">*</span></div>
+            <select class="field-select school-select-planned" onchange="updateVisit(${idx}, 'planned_school', this.value)">
+              ${plannedOptions}
+            </select>
+          </div>
+          
+          <div class="field-row">
+            <div class="field-label">✅ المدرسة المزارة فعلًا</div>
+            <select class="field-select school-select-actual" onchange="onActualSchoolChange(${idx}, this.value)">
+              ${actualOptions}
+            </select>
+            <input type="text" class="field-input" id="actual-other-${idx}" 
+                   placeholder="اكتب اسم المدرسة" 
+                   style="margin-top: 6px; display: none;"
+                   oninput="updateVisit(${idx}, 'actual_school_other', this.value)">
+          </div>
         </div>
         
         <div class="field-row">
@@ -3397,7 +3420,7 @@ function markTodayChip() {
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 
   // تنبيه عند تحديث التطبيق لنسخة جديدة
-  const APP_VERSION = '5.4';
+  const APP_VERSION = '5.5';
   if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
     localStorage.setItem('vr_app_version', APP_VERSION);
     setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
