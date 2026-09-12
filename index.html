@@ -265,6 +265,36 @@
     .stats-side .stat-num { font-size: 17px; }
     .stats-side .stat-label { font-size: 10px; }
   }
+
+  /* الشهر والسنة داخل العمود الجانبي الأيسر: مدمج */
+  .info-sidebar .month-bar {
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 0;
+  }
+  .info-sidebar .month-bar-label {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+  .info-sidebar .month-selectors {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .info-sidebar .month-selectors select,
+  .info-sidebar .month-selectors input {
+    padding: 6px 8px;
+    font-size: 12px;
+    border-radius: 7px;
+  }
+
+  /* ترتيب الجوال: بطاقة اليوم أولًا */
+  @media (max-width: 767px) {
+    .layout {
+      display: flex;
+      flex-direction: column;
+    }
+    .content-area { order: -1; }
+  }
   
   /* ========== بطاقة اليوم ========== */
   .day-card {
@@ -1260,11 +1290,11 @@
   @media (min-width: 768px) {
     .layout {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: flex-start;
     }
     .days-sidebar {
-      flex: 0 0 64px;
+      flex: 0 0 150px;
       position: sticky;
       top: calc(env(safe-area-inset-top, 0px) + 96px);
       max-height: calc(100vh - 140px);
@@ -1273,6 +1303,16 @@
       scrollbar-width: none;
     }
     .days-sidebar::-webkit-scrollbar { display: none; }
+    .info-sidebar {
+      flex: 0 0 160px;
+      position: sticky;
+      top: calc(env(safe-area-inset-top, 0px) + 96px);
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .info-sidebar::-webkit-scrollbar { display: none; }
     .content-area {
       flex: 1;
       min-width: 0;
@@ -1282,28 +1322,29 @@
       flex-wrap: nowrap;
       justify-content: flex-start;
       gap: 3px;
-      margin: 8px 0 0 0;
+      margin: 10px 0 0 0;
       padding: 0;
     }
     .day-chip {
-      flex-direction: column;
+      flex-direction: row;
+      justify-content: flex-start;
       align-items: center;
-      gap: 3px;
+      gap: 6px;
       width: 100%;
-      padding: 5px 2px;
+      padding: 4px 8px;
       border-width: 1px;
       border-radius: 8px;
-      text-align: center;
+      text-align: right;
     }
-    .day-chip .chip-day { display: none; }
-    .day-chip .chip-num { font-size: 14px; }
+    .day-chip .chip-day { display: block; font-size: 10px; }
+    .day-chip .chip-num { font-size: 13px; }
     .day-chip .chip-dot {
       width: 5px;
       height: 5px;
-      margin-inline-start: 0;
+      margin-inline-start: auto;
     }
     .day-chip.chip-all .chip-day { display: none; }
-    .day-chip.chip-all .chip-num { font-size: 10px; }
+    .day-chip.chip-all .chip-num { font-size: 11px; }
   }
 
   /* ========== إتاحة الوصول وتقليل الحركة ========== */
@@ -1365,7 +1406,7 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.6</span></div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.8</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
@@ -1405,32 +1446,21 @@
     </div>
   </div>
   
-  <!-- التخطيط: قائمة الأيام يمينًا والمحتوى يسارًا -->
+  <!-- التخطيط: الأيام يمينًا، بطاقة اليوم في المنتصف، الشهر والإحصاءات يسارًا -->
   <div class="layout">
     <aside class="days-sidebar">
       <!-- قائمة تنقل الأيام -->
       <div class="days-nav" id="daysNav"></div>
-
-      <!-- الإحصاءات (جانبية) -->
-      <div class="stats-strip stats-side">
-        <div class="stat-pill">
-          <div class="stat-num" id="statDays">0</div>
-          <div class="stat-label">أيام العمل</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-num" id="statVisited">0</div>
-          <div class="stat-label">زيارات موثقة</div>
-        </div>
-        <div class="stat-pill gold">
-          <div class="stat-num" id="statPct">0%</div>
-          <div class="stat-label">نسبة الإنجاز</div>
-        </div>
-      </div>
     </aside>
 
     <section class="content-area">
+      <!-- بطاقة اليوم: أول شيء ولا شيء فوقها -->
+      <div id="daysContainer"></div>
+    </section>
+
+    <aside class="info-sidebar">
       <!-- اختيار الشهر والسنة -->
-      <div class="month-bar month-bar--inline">
+      <div class="month-bar">
         <div class="month-bar-label">📅 الشهر والسنة</div>
         <div class="month-selectors">
           <select id="monthSelect" onchange="onMonthChange()">
@@ -1451,9 +1481,22 @@
         </div>
       </div>
 
-      <!-- بطاقات الأيام -->
-      <div id="daysContainer"></div>
-    </section>
+      <!-- الإحصاءات -->
+      <div class="stats-strip stats-side">
+        <div class="stat-pill">
+          <div class="stat-num" id="statDays">0</div>
+          <div class="stat-label">أيام العمل</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num" id="statVisited">0</div>
+          <div class="stat-label">زيارات موثقة</div>
+        </div>
+        <div class="stat-pill gold">
+          <div class="stat-num" id="statPct">0%</div>
+          <div class="stat-label">نسبة الإنجاز</div>
+        </div>
+      </div>
+    </aside>
   </div>
 
 </main>
@@ -3441,7 +3484,7 @@ function markTodayChip() {
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 
   // تنبيه عند تحديث التطبيق لنسخة جديدة
-  const APP_VERSION = '5.6';
+  const APP_VERSION = '5.8';
   if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
     localStorage.setItem('vr_app_version', APP_VERSION);
     setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
