@@ -1097,16 +1097,19 @@
     <div class="modal-body">
       <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 10px;">المدارس المضافة هنا ستظهر كقائمة منسدلة في كل بطاقة يوم.</p>
       
-      <!-- زر لصق صف المدارس -->
+      <!-- زر اللصق الفوري والتوزيع في خطوة واحدة -->
       <div class="paste-row-box">
         <div class="paste-row-title">
           📋 لصق صف مدارس الشهر من Excel
         </div>
         <div class="paste-row-hint">
-          انسخ صفًا أفقيًا من Excel يحوي مدارس الشهر بالترتيب، والتطبيق سيوزّعها على أيام الشهر تلقائيًا.
+          انسخ صفًا أفقيًا من Excel يحوي مدارس الشهر بالترتيب، ثم اضغط الزر — يُقرأ اللصق ويُوزَّع على أيام الشهر تلقائيًا في خطوة واحدة.
         </div>
-        <button class="btn-paste-row" onclick="openPasteRowModal()">
-          📋 لصق صف وتوزيع على الأيام
+        <button class="btn-paste-row" onclick="instantPasteDistribute()">
+          📋 لصق وتوزيع فوري (خطوة واحدة)
+        </button>
+        <button class="btn-paste-row" style="margin-top:6px;background:#eef1f8;color:var(--navy-dark);" onclick="openPasteRowModal()">
+          ✍️ لصق يدوي (احتياط)
         </button>
       </div>
       
@@ -2555,6 +2558,30 @@ function openPasteRowModal() {
     `${ARABIC_MONTHS[currentMonth]} ${currentYear}`;
   pendingPastedSchools = [];
   document.getElementById('pasteRowModal').classList.add('open');
+}
+
+// ========== لصق فوري وتوزيع في خطوة واحدة ==========
+async function instantPasteDistribute() {
+  let text = null;
+  if (navigator.clipboard && navigator.clipboard.readText) {
+    try {
+      text = await navigator.clipboard.readText();
+    } catch (err) {
+      console.warn('تعذّرت القراءة التلقائية للحافظة:', err);
+    }
+  }
+  if (!text || !text.trim()) {
+    openPasteRowModal();
+    showToast('⚠️ تعذّرت القراءة التلقائية — الصق الصف ثم اضغط توزيع', 'error');
+    return;
+  }
+  const parsed = parsePastedRow(text);
+  if (parsed.length === 0) {
+    showToast('⚠️ الحافظة فارغة أو المحتوى غير صالح', 'error');
+    return;
+  }
+  pendingPastedSchools = parsed;
+  distributePastedRow();
 }
 
 function parsePastedRow(text) {
