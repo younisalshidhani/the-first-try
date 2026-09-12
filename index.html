@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="تقرير الزيارات">
 <title>تقرير الزيارات الشهرية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -34,6 +37,32 @@
     --success: #16a34a;
     --danger: #dc2626;
     --warning: #ea580c;
+    --surface-blur: rgba(255,255,255,0.98);
+    --success-soft: #f0fdf4;
+    --warning-soft: #fffbeb;
+    --info-soft: #f0f9ff;
+    --danger-soft: #fef2f2;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 3px rgba(13,40,71,0.07);
+    --shadow-md: 0 2px 8px rgba(13,40,71,0.10);
+  }
+
+  /* الوضع الليلي */
+  [data-theme="dark"] {
+    --bg: #0b1424;
+    --card-bg: #122036;
+    --text: #e8edf6;
+    --text-muted: #93a1b8;
+    --border: #24395a;
+    --border-strong: #2f4a72;
+    --gold-pale: #2b2410;
+    --surface-blur: rgba(18,32,54,0.97);
+    --success-soft: #0c2a1a;
+    --warning-soft: #2b2208;
+    --info-soft: #0a2233;
+    --danger-soft: #2b1010;
   }
   
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -43,7 +72,7 @@
   body {
     margin: 0;
     padding: 0;
-    font-family: 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
+    font-family: 'Cairo', 'Tajawal', -apple-system, BlinkMacSystemFont, 'Segoe UI', Tahoma, sans-serif;
     background: var(--bg);
     color: var(--text);
     line-height: 1.6;
@@ -166,7 +195,7 @@
     border-radius: 10px;
     font-size: 15px;
     font-family: inherit;
-    background: #fff;
+    background: var(--card-bg);
     color: var(--text);
     font-weight: 600;
   }
@@ -273,7 +302,7 @@
     border-radius: 10px;
     font-size: 15px;
     font-family: inherit;
-    background: #fff;
+    background: var(--card-bg);
     color: var(--text);
   }
   .field-input:focus, .field-select:focus {
@@ -288,7 +317,7 @@
     padding: 11px 12px;
     border: 1.5px solid var(--border-strong);
     border-radius: 10px;
-    background: #fff;
+    background: var(--card-bg);
     cursor: pointer;
     transition: all 0.2s;
   }
@@ -329,7 +358,7 @@
     padding: 8px 10px;
     border: 1.5px solid var(--border-strong);
     border-radius: 8px;
-    background: #fff;
+    background: var(--card-bg);
     cursor: pointer;
     font-size: 13px;
     user-select: none;
@@ -367,6 +396,8 @@
     border-radius: 8px;
     font-size: 13px;
     font-family: inherit;
+    background: var(--card-bg);
+    color: var(--text);
   }
   .custom-method-row button {
     padding: 8px 14px;
@@ -386,7 +417,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(255,255,255,0.98);
+    background: var(--surface-blur);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1.5px solid var(--border);
@@ -414,7 +445,7 @@
   }
   .btn-secondary { background: var(--navy-dark); color: #fff; }
   .btn-tertiary {
-    background: #fff;
+    background: var(--card-bg);
     color: var(--navy-dark);
     border: 1.5px solid var(--border-strong);
   }
@@ -497,7 +528,7 @@
     margin-top: 10px;
   }
   .chip-item {
-    background: #fff;
+    background: var(--card-bg);
     border: 1.5px solid var(--navy);
     color: var(--navy-dark);
     padding: 8px 12px;
@@ -529,6 +560,8 @@
     border-radius: 10px;
     font-size: 14px;
     font-family: inherit;
+    background: var(--card-bg);
+    color: var(--text);
   }
   .add-row button {
     padding: 11px 16px;
@@ -682,7 +715,7 @@
   
   /* ========== شريط تذكير ========== */
   .reminder-banner {
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    background: var(--warning-soft);
     border: 1.5px solid var(--warning);
     border-radius: 12px;
     padding: 12px 14px;
@@ -721,6 +754,8 @@
     border-radius: 10px;
     margin-bottom: 6px;
     cursor: pointer;
+    background: var(--card-bg);
+    color: var(--text);
   }
   .notif-radio.active {
     background: var(--gold-pale);
@@ -788,7 +823,7 @@
   }
   .archive-btn-open { background: var(--navy-dark); color: #fff; }
   .archive-btn-generate { background: var(--gold); color: var(--navy-dark); }
-  .archive-btn-delete { background: #fee; color: var(--danger); border: 1px solid var(--danger); }
+  .archive-btn-delete { background: var(--danger-soft); color: var(--danger); border: 1px solid var(--danger); }
   
   .archive-empty {
     text-align: center;
@@ -854,7 +889,7 @@
   .btn-paste-row:hover { background: var(--navy); }
   
   .paste-help {
-    background: #f0f9ff;
+    background: var(--info-soft);
     border-right: 3px solid #0284c7;
     padding: 10px 14px;
     border-radius: 8px;
@@ -893,6 +928,8 @@
     direction: rtl;
     resize: vertical;
     min-height: 80px;
+    background: var(--card-bg);
+    color: var(--text);
   }
   .paste-textarea:focus {
     outline: none;
@@ -902,7 +939,7 @@
   .paste-preview {
     margin-top: 12px;
     padding: 12px;
-    background: #f0fdf4;
+    background: var(--success-soft);
     border: 1px solid var(--success);
     border-radius: 10px;
     font-size: 13px;
@@ -916,7 +953,7 @@
   }
   .paste-preview-item {
     padding: 4px 8px;
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 6px;
     margin-bottom: 4px;
     display: flex;
@@ -937,7 +974,7 @@
   .btn-cleanup {
     width: 100%;
     padding: 10px;
-    background: #fef3c7;
+    background: var(--warning-soft);
     color: #92400e;
     border: 1.5px solid #fbbf24;
     border-radius: 8px;
@@ -946,7 +983,146 @@
     cursor: pointer;
     font-family: inherit;
   }
-  .btn-cleanup:hover { background: #fde68a; }
+  .btn-cleanup:hover { opacity: 0.85; }
+
+  /* ========== شريط تنقل الأيام ========== */
+  .days-nav {
+    position: sticky;
+    top: calc(env(safe-area-inset-top, 0px) + 94px);
+    z-index: 90;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding: 8px 2px 10px 2px;
+    margin: 0 -16px 4px -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background: var(--bg);
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .days-nav::-webkit-scrollbar { display: none; }
+
+  .day-chip {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    min-width: 44px;
+    padding: 7px 9px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  }
+  .day-chip:active { transform: scale(0.94); }
+  .day-chip .chip-day { font-size: 10px; color: var(--text-muted); font-weight: 600; }
+  .day-chip .chip-num { font-size: 15px; font-weight: 800; line-height: 1; }
+  .day-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); }
+  .day-chip .chip-dot.filled { background: var(--success); }
+  .day-chip .chip-dot.partial { background: var(--gold); }
+  .day-chip.today {
+    border-color: var(--gold);
+    background: var(--gold-pale);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ========== بطاقة اليوم القابلة للطي ========== */
+  .day-card { transition: border-color 0.2s, box-shadow 0.2s; }
+  .day-card.open { border-color: var(--gold); box-shadow: var(--shadow-md); }
+
+  .day-header {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .day-header-right { display: flex; align-items: center; gap: 10px; }
+  .day-chevron {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+    color: var(--gold-light);
+  }
+  .day-card.open .day-chevron { transform: rotate(180deg); }
+  .day-card.open .day-header { background: linear-gradient(135deg, var(--navy), var(--navy-light)); }
+
+  .day-body { display: none; padding: 14px; }
+  .day-card.open .day-body { display: block; animation: fadeIn 0.18s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .day-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px 10px 14px;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .sbadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--border);
+    color: var(--text);
+    border: 1px solid transparent;
+  }
+  .sbadge.ok { background: var(--success-soft); color: var(--success); border-color: var(--success); }
+  .sbadge.plan { background: var(--info-soft); color: #0369a1; border-color: #7dd3fc; }
+  .sbadge.warn { background: var(--warning-soft); color: var(--warning); border-color: var(--warning); }
+  .sbadge.empty { color: var(--text-muted); font-weight: 400; }
+
+  /* ========== زر اليوم العائم ========== */
+  .fab-today {
+    position: fixed;
+    left: 16px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 82px);
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 16px;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
+    color: var(--gold-light);
+    font-size: 13px;
+    font-weight: 800;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(13,40,71,0.35);
+    transition: transform 0.15s;
+  }
+  .fab-today:active { transform: scale(0.94); }
+
+  /* ========== إتاحة الوصول وتقليل الحركة ========== */
+  :focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
 </style>
 </head>
 <body>
@@ -999,6 +1175,7 @@
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
       <button class="icon-btn" onclick="openMethodsModal()" title="الأساليب">📝</button>
       <button class="icon-btn" onclick="openNotifModal()" title="الإشعارات">🔔</button>
+      <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="الوضع الليلي">🌙</button>
       <button class="icon-btn" onclick="openProfileModal()" title="بياناتي">👤</button>
     </div>
   </div>
@@ -1053,6 +1230,9 @@
     </div>
   </div>
   
+  <!-- شريط تنقل الأيام -->
+  <div class="days-nav" id="daysNav"></div>
+  
   <!-- الإحصاءات -->
   <div class="stats-strip">
     <div class="stat-pill">
@@ -1083,6 +1263,9 @@
 
 <!-- ========== Toast ========== -->
 <div class="toast" id="toast"></div>
+
+<!-- ========== زر اليوم العائم ========== -->
+<button class="fab-today" id="fabToday" onclick="goToToday()" title="الانتقال إلى بطاقة اليوم">📅 اليوم</button>
 
 <!-- ========== مؤشر الحفظ التلقائي ========== -->
 <div class="autosave-indicator" id="autosaveIndicator">💾 محفوظ تلقائيًا</div>
@@ -1920,6 +2103,8 @@ function renderDays() {
   }));
   
   container.innerHTML = currentVisits.map((v, i) => buildDayCard(v, i)).join('');
+  renderDayChips();
+  markTodayChip();
   updateStats();
 }
 
@@ -1933,12 +2118,16 @@ function buildDayCard(v, idx) {
   
   return `
     <div class="day-card" data-idx="${idx}" id="card-${idx}">
-      <div class="day-header">
+      <div class="day-header" onclick="toggleDay(${idx})">
         <div class="day-header-info">
           <span class="day-name">${v.day_name}</span>
           <span class="day-date">${v.date}</span>
         </div>
+        <div class="day-header-right">
+          <span class="day-chevron">▾</span>
+        </div>
       </div>
+      <div class="day-summary" id="summary-${idx}" onclick="toggleDay(${idx})">${cardSummaryHtml(v)}</div>
       <div class="day-body">
         
         <div class="field-row">
@@ -2002,6 +2191,108 @@ function buildDayCard(v, idx) {
   `;
 }
 
+// ========== ملخص البطاقة والطي/الفتح ==========
+function cardSummaryHtml(v) {
+  const badges = [];
+  if (v.school_visit_mark === '√') badges.push('<span class="sbadge ok">✓ موثق</span>');
+  if (v.planned_school) badges.push(`<span class="sbadge plan">🏫 ${escapeHtml(v.planned_school)}</span>`);
+  if (v.actual_school || (v.actual_school_other && v.actual_school_other.trim())) {
+    badges.push(`<span class="sbadge ok">✅ ${escapeHtml(v.actual_school_other || v.actual_school)}</span>`);
+  }
+  if (v.supervisory_visits_count) badges.push(`<span class="sbadge">📊 ${v.supervisory_visits_count}</span>`);
+  if (v.supervision_methods) badges.push(`<span class="sbadge">📝 ${escapeHtml(v.supervision_methods)}</span>`);
+  if (v.e_followup_mark === '√') badges.push('<span class="sbadge warn">🔔 متابعة</span>');
+  if (!badges.length) return '<span class="sbadge empty">لم تُملأ بعد — اضغط للفتح</span>';
+  return badges.join('');
+}
+
+function updateSummary(idx) {
+  const el = document.getElementById(`summary-${idx}`);
+  if (el) el.innerHTML = cardSummaryHtml(currentVisits[idx]);
+}
+
+function toggleDay(idx) {
+  const card = document.getElementById(`card-${idx}`);
+  if (!card) return;
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.day-card.open').forEach(c => c.classList.remove('open'));
+  if (!isOpen) {
+    card.classList.add('open');
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function expandDay(idx) {
+  const card = document.getElementById(`card-${idx}`);
+  if (!card) return;
+  document.querySelectorAll('.day-card.open').forEach(c => c.classList.remove('open'));
+  card.classList.add('open');
+}
+
+function goToDay(idx) {
+  const card = document.getElementById(`card-${idx}`);
+  if (!card) return;
+  expandDay(idx);
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // تمييز مؤقت للبطاقة المستهدفة
+  card.style.transition = 'box-shadow .3s, border-color .3s';
+  card.classList.add('open');
+}
+
+function goToToday() {
+  const now = new Date();
+  const dow = now.getDay();
+  if (dow === 5 || dow === 6) {
+    showToast('🌴 اليوم عطلة نهاية الأسبوع', 'success');
+    return;
+  }
+  if (now.getMonth() + 1 !== currentMonth || now.getFullYear() !== currentYear) {
+    // انتقل لشهر اليوم ثم لبطاقته
+    document.getElementById('monthSelect').value = now.getMonth() + 1;
+    document.getElementById('yearSelect').value = now.getFullYear();
+    currentMonth = now.getMonth() + 1;
+    currentYear = now.getFullYear();
+    renderDays();
+  }
+  const dateStr = `${now.getDate()}/${currentMonth}`;
+  const idx = currentVisits.findIndex(v => v.date === dateStr);
+  if (idx >= 0) {
+    goToDay(idx);
+    showToast('📅 انتقلت إلى بطاقة اليوم', 'success');
+  } else {
+    showToast('لم يُعثر على بطاقة اليوم', 'error');
+  }
+}
+
+// ========== شريط تنقل الأيام ==========
+function renderDayChips() {
+  const nav = document.getElementById('daysNav');
+  if (!nav) return;
+  nav.innerHTML = currentVisits.map((v, i) => {
+    const shortDay = v.day_name.replace('ال', '');
+    return `
+      <button class="day-chip" id="chip-${i}" onclick="goToDay(${i})" aria-label="${v.day_name} ${v.date}">
+        <span class="chip-day">${shortDay}</span>
+        <span class="chip-num">${v.date.split('/')[0]}</span>
+        <span class="chip-dot ${chipStatus(v)}" id="chipdot-${i}"></span>
+      </button>`;
+  }).join('');
+}
+
+function chipStatus(v) {
+  if (v.school_visit_mark === '√') return 'filled';
+  if (hasAnyData(v)) return 'partial';
+  return '';
+}
+
+function updateChips() {
+  if (!currentVisits) return;
+  currentVisits.forEach((v, i) => {
+    const dot = document.getElementById(`chipdot-${i}`);
+    if (dot) dot.className = 'chip-dot ' + chipStatus(v);
+  });
+}
+
 function onActualSchoolChange(idx, value) {
   const otherInput = document.getElementById(`actual-other-${idx}`);
   if (value === '__OTHER__') {
@@ -2047,6 +2338,8 @@ function markCardHasData(idx) {
   } else {
     card.classList.remove('has-data', 'visited');
   }
+  updateSummary(idx);
+  updateChips();
 }
 
 function hasAnyData(v) {
@@ -2561,8 +2854,27 @@ function openPasteRowModal() {
 }
 
 // ========== لصق فوري وتوزيع في خطوة واحدة ==========
+// طريقة احتياطية: لصق عبر textarea خفي + execCommand
+// تعمل في المتصفحات والبروتوكولات التي تمنع navigator.clipboard.readText
+function legacyClipboardPaste() {
+  return new Promise((resolve) => {
+    const ta = document.createElement('textarea');
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0;';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('paste'); } catch (e) { ok = false; }
+    const text = ta.value || '';
+    document.body.removeChild(ta);
+    resolve(ok ? text : null);
+  });
+}
+
 async function instantPasteDistribute() {
   let text = null;
+  // المحاولة 1: واجهة الحافظة الحديثة
   if (navigator.clipboard && navigator.clipboard.readText) {
     try {
       text = await navigator.clipboard.readText();
@@ -2570,9 +2882,19 @@ async function instantPasteDistribute() {
       console.warn('تعذّرت القراءة التلقائية للحافظة:', err);
     }
   }
+  // المحاولة 2: اللصق الاحتياطي الداخلي (بدون أي خطوة من المستخدم)
+  if (!text || !text.trim()) {
+    try {
+      const legacy = await legacyClipboardPaste();
+      if (legacy && legacy.trim()) text = legacy;
+    } catch (e) {
+      console.warn('فشل اللصق الاحتياطي:', e);
+    }
+  }
+  // المحاولة الأخيرة فقط: نافذة اللصق اليدوي
   if (!text || !text.trim()) {
     openPasteRowModal();
-    showToast('⚠️ تعذّرت القراءة التلقائية — الصق الصف ثم اضغط توزيع', 'error');
+    showToast('⚠️ تعذّر اللصق التلقائي — الصق الصف ثم اضغط توزيع', 'error');
     return;
   }
   const parsed = parsePastedRow(text);
@@ -2729,6 +3051,35 @@ function cleanupSchools() {
   showToast(`✓ حُذفت ${corrupted.length} مدرسة معطوبة`, 'success');
 }
 
+// ========== الوضع الليلي ==========
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('vr_theme', theme);
+  const btn = document.getElementById('themeToggle');
+  if (btn) btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  applyTheme(current === 'dark' ? 'light' : 'dark');
+}
+
+// ========== تمييز شريحة اليوم الحالي ==========
+function markTodayChip() {
+  document.querySelectorAll('.day-chip.today').forEach(c => c.classList.remove('today'));
+  const now = new Date();
+  if (now.getMonth() + 1 !== currentMonth || now.getFullYear() !== currentYear) return;
+  const idx = currentVisits.findIndex(v => v.date === `${now.getDate()}/${currentMonth}`);
+  if (idx >= 0) {
+    const chip = document.getElementById(`chip-${idx}`);
+    if (chip) {
+      chip.classList.add('today');
+      const nav = document.getElementById('daysNav');
+      if (nav) nav.scrollLeft = chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2;
+    }
+  }
+}
+
 // ========== بدء التشغيل ==========
 (function init() {
   const now = new Date();
@@ -2736,18 +3087,23 @@ function cleanupSchools() {
   currentYear = now.getFullYear();
   document.getElementById('monthSelect').value = currentMonth;
   document.getElementById('yearSelect').value = currentYear;
-  
+
+  // تطبيق الوضع الليلي المحفوظ أو تفضيل النظام
+  const savedTheme = localStorage.getItem('vr_theme');
+  const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
+
   if (showWelcomeIfNeeded()) return;
-  
+
   updateHeader();
   renderDays();
-  
+
   // تحميل المسودة الحالية تلقائيًا (إن وُجدت)
   const key = `vr_draft_${currentYear}_${currentMonth}`;
   if (localStorage.getItem(key)) {
     setTimeout(() => loadDraft(), 100);
   }
-  
+
   // فحص التذكير بعد ثانية من الفتح
   setTimeout(checkReminderOnLoad, 800);
 })();
