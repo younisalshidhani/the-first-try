@@ -176,7 +176,7 @@
   .main {
     padding: 16px;
     padding-bottom: 190px;
-    max-width: 720px;
+    max-width: 980px;
     margin: 0 auto;
   }
   
@@ -438,7 +438,7 @@
     z-index: 50;
     display: flex;
     gap: 8px;
-    max-width: 720px;
+    max-width: 980px;
     margin: 0 auto;
     left: 0;
     right: 0;
@@ -1140,6 +1140,51 @@
   .sbadge.warn { background: var(--warning-soft); color: var(--warning); border-color: var(--warning); }
   .sbadge.empty { color: var(--text-muted); font-weight: 400; }
 
+  /* ========== التخطيط الجانبي (شاشات متوسطة وكبيرة) ========== */
+  @media (min-width: 768px) {
+    .layout {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .days-sidebar {
+      flex: 0 0 220px;
+      position: sticky;
+      top: calc(env(safe-area-inset-top, 0px) + 100px);
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+      padding-bottom: 8px;
+      scrollbar-width: none;
+    }
+    .days-sidebar::-webkit-scrollbar { display: none; }
+    .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+    .days-nav {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+      gap: 5px;
+      margin: 12px 0 0 0;
+      padding: 0;
+    }
+    .day-chip {
+      flex-direction: row;
+      justify-content: flex-start;
+      gap: 8px;
+      width: 100%;
+      padding: 7px 10px;
+      text-align: right;
+    }
+    .day-chip .chip-dot {
+      margin-inline-start: auto;
+    }
+    .month-selectors {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* ========== إتاحة الوصول وتقليل الحركة ========== */
   :focus-visible {
     outline: 3px solid var(--gold);
@@ -1239,50 +1284,57 @@
     </div>
   </div>
   
-  <!-- اختيار الشهر -->
-  <div class="month-bar">
-    <div class="month-bar-label">📅 الشهر والسنة</div>
-    <div class="month-selectors">
-      <select id="monthSelect" onchange="onMonthChange()">
-        <option value="1">يناير</option>
-        <option value="2">فبراير</option>
-        <option value="3">مارس</option>
-        <option value="4">أبريل</option>
-        <option value="5">مايو</option>
-        <option value="6">يونيو</option>
-        <option value="7">يوليو</option>
-        <option value="8">أغسطس</option>
-        <option value="9">سبتمبر</option>
-        <option value="10">أكتوبر</option>
-        <option value="11">نوفمبر</option>
-        <option value="12">ديسمبر</option>
-      </select>
-      <input type="number" id="yearSelect" min="2024" max="2030" onchange="onMonthChange()">
-    </div>
+  <!-- التخطيط: قائمة الأيام يمينًا والمحتوى يسارًا -->
+  <div class="layout">
+    <aside class="days-sidebar">
+      <!-- اختيار الشهر -->
+      <div class="month-bar">
+        <div class="month-bar-label">📅 الشهر والسنة</div>
+        <div class="month-selectors">
+          <select id="monthSelect" onchange="onMonthChange()">
+            <option value="1">يناير</option>
+            <option value="2">فبراير</option>
+            <option value="3">مارس</option>
+            <option value="4">أبريل</option>
+            <option value="5">مايو</option>
+            <option value="6">يونيو</option>
+            <option value="7">يوليو</option>
+            <option value="8">أغسطس</option>
+            <option value="9">سبتمبر</option>
+            <option value="10">أكتوبر</option>
+            <option value="11">نوفمبر</option>
+            <option value="12">ديسمبر</option>
+          </select>
+          <input type="number" id="yearSelect" min="2024" max="2030" onchange="onMonthChange()">
+        </div>
+      </div>
+
+      <!-- قائمة تنقل الأيام -->
+      <div class="days-nav" id="daysNav"></div>
+    </aside>
+
+    <section class="content-area">
+      <!-- الإحصاءات -->
+      <div class="stats-strip">
+        <div class="stat-pill">
+          <div class="stat-num" id="statDays">0</div>
+          <div class="stat-label">أيام العمل</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num" id="statVisited">0</div>
+          <div class="stat-label">زيارات موثقة</div>
+        </div>
+        <div class="stat-pill gold">
+          <div class="stat-num" id="statPct">0%</div>
+          <div class="stat-label">نسبة الإنجاز</div>
+        </div>
+      </div>
+
+      <!-- بطاقات الأيام -->
+      <div id="daysContainer"></div>
+    </section>
   </div>
-  
-  <!-- شريط تنقل الأيام -->
-  <div class="days-nav" id="daysNav"></div>
-  
-  <!-- الإحصاءات -->
-  <div class="stats-strip">
-    <div class="stat-pill">
-      <div class="stat-num" id="statDays">0</div>
-      <div class="stat-label">أيام العمل</div>
-    </div>
-    <div class="stat-pill">
-      <div class="stat-num" id="statVisited">0</div>
-      <div class="stat-label">زيارات موثقة</div>
-    </div>
-    <div class="stat-pill gold">
-      <div class="stat-num" id="statPct">0%</div>
-      <div class="stat-label">نسبة الإنجاز</div>
-    </div>
-  </div>
-  
-  <!-- بطاقات الأيام -->
-  <div id="daysContainer"></div>
-  
+
 </main>
 
 <!-- شريط الإجراءات -->
