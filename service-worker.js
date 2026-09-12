@@ -1,7 +1,7 @@
-// Service Worker لتطبيق تقرير الزيارات الشهرية - v5.3.0
+// Service Worker لتطبيق تقرير الزيارات الشهرية - v5.4.0
 // يُتيح العمل دون إنترنت ويعالج الإشعارات المجدولة
 
-const CACHE_NAME = 'visit-report-v5.3.0';
+const CACHE_NAME = 'visit-report-v5.4.0';
 const CACHE_FILES = [
   './',
   './index.html',
