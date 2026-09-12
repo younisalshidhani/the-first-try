@@ -244,6 +244,27 @@
   }
   .stat-pill.gold { background: var(--gold-pale); border-color: var(--gold); }
   .stat-pill.gold .stat-num { color: var(--gold); }
+
+  /* الإحصاءات داخل القائمة الجانبية: عمودية ومدمجة */
+  .stats-side {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin: 12px 0 0 0;
+  }
+  .stats-side .stat-pill {
+    padding: 7px 4px;
+    border-radius: 10px;
+  }
+  .stats-side .stat-num { font-size: 15px; }
+  .stats-side .stat-label { font-size: 9px; margin-top: 2px; }
+  @media (max-width: 767px) {
+    .stats-side {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .stats-side .stat-num { font-size: 17px; }
+    .stats-side .stat-label { font-size: 10px; }
+  }
   
   /* ========== بطاقة اليوم ========== */
   .day-card {
@@ -1344,7 +1365,7 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.5</span></div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.6</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
@@ -1389,6 +1410,22 @@
     <aside class="days-sidebar">
       <!-- قائمة تنقل الأيام -->
       <div class="days-nav" id="daysNav"></div>
+
+      <!-- الإحصاءات (جانبية) -->
+      <div class="stats-strip stats-side">
+        <div class="stat-pill">
+          <div class="stat-num" id="statDays">0</div>
+          <div class="stat-label">أيام العمل</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-num" id="statVisited">0</div>
+          <div class="stat-label">زيارات موثقة</div>
+        </div>
+        <div class="stat-pill gold">
+          <div class="stat-num" id="statPct">0%</div>
+          <div class="stat-label">نسبة الإنجاز</div>
+        </div>
+      </div>
     </aside>
 
     <section class="content-area">
@@ -1411,22 +1448,6 @@
             <option value="12">ديسمبر</option>
           </select>
           <input type="number" id="yearSelect" min="2024" max="2030" onchange="onMonthChange()">
-        </div>
-      </div>
-
-      <!-- الإحصاءات -->
-      <div class="stats-strip">
-        <div class="stat-pill">
-          <div class="stat-num" id="statDays">0</div>
-          <div class="stat-label">أيام العمل</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-num" id="statVisited">0</div>
-          <div class="stat-label">زيارات موثقة</div>
-        </div>
-        <div class="stat-pill gold">
-          <div class="stat-num" id="statPct">0%</div>
-          <div class="stat-label">نسبة الإنجاز</div>
         </div>
       </div>
 
@@ -3420,7 +3441,7 @@ function markTodayChip() {
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 
   // تنبيه عند تحديث التطبيق لنسخة جديدة
-  const APP_VERSION = '5.5';
+  const APP_VERSION = '5.6';
   if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
     localStorage.setItem('vr_app_version', APP_VERSION);
     setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
