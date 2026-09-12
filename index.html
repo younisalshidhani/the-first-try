@@ -102,6 +102,17 @@
     font-weight: 700;
     color: var(--gold);
   }
+  .app-version {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold-light);
+    background: rgba(212,175,55,0.15);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 999px;
+    padding: 1px 7px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
   .header-actions { display: flex; gap: 4px; }
   .icon-btn {
     background: rgba(255,255,255,0.1);
@@ -164,7 +175,7 @@
   /* ========== المحتوى ========== */
   .main {
     padding: 16px;
-    padding-bottom: 160px;
+    padding-bottom: 190px;
     max-width: 720px;
     margin: 0 auto;
   }
@@ -421,10 +432,16 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border-top: 1.5px solid var(--border);
-    padding: 12px 16px calc(env(safe-area-inset-bottom, 0px) + 12px) 16px;
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 -4px 16px rgba(13,40,71,0.10);
+    padding: 10px 12px calc(env(safe-area-inset-bottom, 0px) + 10px) 12px;
     z-index: 50;
     display: flex;
     gap: 8px;
+    max-width: 720px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
   }
   .btn {
     padding: 12px 16px;
@@ -835,7 +852,7 @@
   /* ========== مؤشر الحفظ التلقائي ========== */
   .autosave-indicator {
     position: fixed;
-    bottom: 80px;
+    bottom: 96px;
     left: 16px;
     background: var(--success);
     color: #fff;
@@ -985,32 +1002,25 @@
   }
   .btn-cleanup:hover { opacity: 0.85; }
 
-  /* ========== شريط تنقل الأيام ========== */
+  /* ========== شريط تنقل الأيام (كل الأيام ظاهرة في صفوف) ========== */
   .days-nav {
-    position: sticky;
-    top: calc(env(safe-area-inset-top, 0px) + 94px);
-    z-index: 90;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
-    overflow-x: auto;
-    padding: 8px 2px 10px 2px;
-    margin: 0 -16px 4px -16px;
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 10px 4px 4px 4px;
+    margin: 0 0 8px 0;
     background: var(--bg);
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
   }
-  .days-nav::-webkit-scrollbar { display: none; }
 
   .day-chip {
     flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    min-width: 44px;
-    padding: 7px 9px;
+    gap: 1px;
+    min-width: 38px;
+    padding: 4px 5px;
     border-radius: var(--radius-md);
     border: 1.5px solid var(--border);
     background: var(--card-bg);
@@ -1020,8 +1030,8 @@
     transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
   }
   .day-chip:active { transform: scale(0.94); }
-  .day-chip .chip-day { font-size: 10px; color: var(--text-muted); font-weight: 600; }
-  .day-chip .chip-num { font-size: 15px; font-weight: 800; line-height: 1; }
+  .day-chip .chip-day { font-size: 9px; color: var(--text-muted); font-weight: 600; }
+  .day-chip .chip-num { font-size: 13px; font-weight: 800; line-height: 1; }
   .day-chip .chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border-strong); }
   .day-chip .chip-dot.filled { background: var(--success); }
   .day-chip .chip-dot.partial { background: var(--gold); }
@@ -1130,29 +1140,6 @@
   .sbadge.warn { background: var(--warning-soft); color: var(--warning); border-color: var(--warning); }
   .sbadge.empty { color: var(--text-muted); font-weight: 400; }
 
-  /* ========== زر اليوم العائم ========== */
-  .fab-today {
-    position: fixed;
-    left: 16px;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 82px);
-    z-index: 60;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 11px 16px;
-    border: none;
-    border-radius: 999px;
-    background: linear-gradient(135deg, var(--navy-dark), var(--navy));
-    color: var(--gold-light);
-    font-size: 13px;
-    font-weight: 800;
-    font-family: inherit;
-    cursor: pointer;
-    box-shadow: 0 6px 18px rgba(13,40,71,0.35);
-    transition: transform 0.15s;
-  }
-  .fab-today:active { transform: scale(0.94); }
-
   /* ========== إتاحة الوصول وتقليل الحركة ========== */
   :focus-visible {
     outline: 3px solid var(--gold);
@@ -1212,12 +1199,13 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية</div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.2</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
       <button class="icon-btn" onclick="openMethodsModal()" title="الأساليب">📝</button>
       <button class="icon-btn" onclick="openNotifModal()" title="الإشعارات">🔔</button>
+      <button class="icon-btn" onclick="goToToday()" title="اليوم">📅</button>
       <button class="icon-btn" id="themeToggle" onclick="toggleTheme()" title="الوضع الليلي">🌙</button>
       <button class="icon-btn" onclick="openProfileModal()" title="بياناتي">👤</button>
     </div>
@@ -1306,9 +1294,6 @@
 
 <!-- ========== Toast ========== -->
 <div class="toast" id="toast"></div>
-
-<!-- ========== زر اليوم العائم ========== -->
-<button class="fab-today" id="fabToday" onclick="goToToday()" title="الانتقال إلى بطاقة اليوم">📅 اليوم</button>
 
 <!-- ========== مؤشر الحفظ التلقائي ========== -->
 <div class="autosave-indicator" id="autosaveIndicator">💾 محفوظ تلقائيًا</div>
@@ -1453,7 +1438,7 @@
           <li>في Excel، حدّد الخلايا الأفقية التي تحوي مدارس الشهر بالترتيب من اليوم الأول إلى الأخير</li>
           <li>اضغط <strong>نسخ (Ctrl+C)</strong></li>
           <li>الصقها في المربع أدناه (Ctrl+V)</li>
-          <li>اضغط <strong>"توزيع"</strong> ليُوزّعها التطبيق على أيام الشهر تلقائيًا</li>
+          <li>سيتوزّع الصف <strong>تلقائيًا فور اللصق</strong> دون أي ضغطة إضافية</li>
         </ol>
       </div>
       
@@ -2955,6 +2940,7 @@ function buildReportBlob() {
 // ========== ميزة لصق صف المدارس وتوزيعها على الأيام ==========
 let pendingPastedSchools = [];
 
+// نافذة اللصق اليدوي: تُوزَّع تلقائيًا فور اللصق (بدون أي زر إضافي)
 function openPasteRowModal() {
   document.getElementById('pasteRowArea').value = '';
   document.getElementById('pastePreview').style.display = 'none';
@@ -2963,19 +2949,71 @@ function openPasteRowModal() {
     `${ARABIC_MONTHS[currentMonth]} ${currentYear}`;
   pendingPastedSchools = [];
   document.getElementById('pasteRowModal').classList.add('open');
+
+  const area = document.getElementById('pasteRowArea');
+  setTimeout(() => area.focus(), 150);
+
+  // توزيع تلقائي فور اللصق
+  area.onpaste = () => {
+    setTimeout(() => {
+      const parsed = parsePastedRow(area.value);
+      if (parsed.length > 0) {
+        pendingPastedSchools = parsed;
+        distributePastedRow();
+      }
+    }, 250);
+  };
+  // للجوال: بعض المتصفحات لا تُطلق حدث paste
+  area.oninput = debounce(() => {
+    const parsed = parsePastedRow(area.value);
+    if (parsed.length > 0) {
+      pendingPastedSchools = parsed;
+      distributePastedRow();
+    }
+  }, 800);
+}
+
+function debounce(fn, ms) {
+  let t = null;
+  return (...args) => {
+    if (t) clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
 }
 
 // ========== لصق فوري وتوزيع في خطوة واحدة ==========
-// طريقة احتياطية: لصق عبر textarea خفي + execCommand
-// تعمل في المتصفحات والبروتوكولات التي تمنع navigator.clipboard.readText
+// قراءة الحافظة بكل الطرق الممكنة
+async function readClipboardText() {
+  // 1) واجهة readText الحديثة
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      const t = await navigator.clipboard.readText();
+      if (t && t.trim()) return t;
+    }
+  } catch (e) { console.warn('readText فشل:', e); }
+  // 2) واجهة read() مع ClipboardItem
+  try {
+    if (navigator.clipboard && navigator.clipboard.read) {
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        if (item.types.includes('text/plain')) {
+          const blob = await item.getType('text/plain');
+          const t = await blob.text();
+          if (t && t.trim()) return t;
+        }
+      }
+    }
+  } catch (e) { console.warn('read() فشل:', e); }
+  return null;
+}
+
+// لصق عبر textarea خفي + execCommand (يعمل مع file:// في كروم/إيدج)
 function legacyClipboardPaste() {
   return new Promise((resolve) => {
     const ta = document.createElement('textarea');
-    ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0;';
+    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0.01;z-index:99999;';
     document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
+    ta.focus({ preventScroll: true });
     let ok = false;
     try { ok = document.execCommand('paste'); } catch (e) { ok = false; }
     const text = ta.value || '';
@@ -2985,16 +3023,9 @@ function legacyClipboardPaste() {
 }
 
 async function instantPasteDistribute() {
-  let text = null;
-  // المحاولة 1: واجهة الحافظة الحديثة
-  if (navigator.clipboard && navigator.clipboard.readText) {
-    try {
-      text = await navigator.clipboard.readText();
-    } catch (err) {
-      console.warn('تعذّرت القراءة التلقائية للحافظة:', err);
-    }
-  }
-  // المحاولة 2: اللصق الاحتياطي الداخلي (بدون أي خطوة من المستخدم)
+  let text = await readClipboardText();
+
+  // الطريقة القديمة إن فشلت الحديثة
   if (!text || !text.trim()) {
     try {
       const legacy = await legacyClipboardPaste();
@@ -3003,12 +3034,14 @@ async function instantPasteDistribute() {
       console.warn('فشل اللصق الاحتياطي:', e);
     }
   }
-  // المحاولة الأخيرة فقط: نافذة اللصق اليدوي
+
+  // الملاذ الأخير: نافذة لصق واحدة تُوزَّع تلقائيًا فور اللصق
   if (!text || !text.trim()) {
     openPasteRowModal();
-    showToast('⚠️ تعذّر اللصق التلقائي — الصق الصف ثم اضغط توزيع', 'error');
+    showToast('🔒 المتصفح منع القراءة التلقائية — الصق الصف وسيُوزَّع فورًا', 'error');
     return;
   }
+
   const parsed = parsePastedRow(text);
   if (parsed.length === 0) {
     showToast('⚠️ الحافظة فارغة أو المحتوى غير صالح', 'error');
@@ -3190,8 +3223,7 @@ function markTodayChip() {
     const chip = document.getElementById(`chip-${idx}`);
     if (chip) {
       chip.classList.add('today');
-      const nav = document.getElementById('daysNav');
-      if (nav) nav.scrollLeft = chip.offsetLeft - nav.clientWidth / 2 + chip.clientWidth / 2;
+      chip.scrollIntoView({ block: 'nearest' });
     }
   }
 }
@@ -3208,6 +3240,13 @@ function markTodayChip() {
   const savedTheme = localStorage.getItem('vr_theme');
   const systemDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
+
+  // تنبيه عند تحديث التطبيق لنسخة جديدة
+  const APP_VERSION = '5.2';
+  if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
+    localStorage.setItem('vr_app_version', APP_VERSION);
+    setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
+  }
 
   if (showWelcomeIfNeeded()) return;
 
