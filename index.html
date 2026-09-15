@@ -1406,7 +1406,7 @@
 <!-- ========== الترويسة ========== -->
 <header class="app-header">
   <div class="app-header-top">
-    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.8</span></div>
+    <div class="app-title">📋 تقرير الزيارات الشهرية <span class="app-version">v5.8.1</span></div>
     <div class="header-actions">
       <button class="icon-btn" onclick="openArchiveModal()" title="الأرشيف">📁</button>
       <button class="icon-btn" onclick="openSchoolsModal()" title="المدارس">🏫</button>
@@ -1524,19 +1524,16 @@
     <div class="modal-body">
       <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 10px;">المدارس المضافة هنا ستظهر كقائمة منسدلة في كل بطاقة يوم.</p>
       
-      <!-- زر اللصق الفوري والتوزيع في خطوة واحدة -->
+      <!-- لصق متوافق مع SharePoint Embed: المستخدم ينفّذ Ctrl+V داخل مربع اللصق -->
       <div class="paste-row-box">
         <div class="paste-row-title">
           📋 لصق صف مدارس الشهر من Excel
         </div>
         <div class="paste-row-hint">
-          انسخ صفًا أفقيًا من Excel يحوي مدارس الشهر بالترتيب، ثم اضغط الزر — يُقرأ اللصق ويُوزَّع على أيام الشهر تلقائيًا في خطوة واحدة.
+          انسخ صف المدارس من Excel، ثم افتح مربع اللصق واضغط <strong>Ctrl+V</strong>. سيُوزَّع الصف على أيام الشهر تلقائيًا فور اللصق.
         </div>
-        <button class="btn-paste-row" onclick="instantPasteDistribute()">
-          📋 لصق وتوزيع فوري (خطوة واحدة)
-        </button>
-        <button class="btn-paste-row" style="margin-top:6px;background:#eef1f8;color:var(--navy-dark);" onclick="openPasteRowModal()">
-          ✍️ لصق يدوي (احتياط)
+        <button class="btn-paste-row" onclick="openPasteRowModal()">
+          📋 لصق مدارس الشهر
         </button>
       </div>
       
@@ -3182,37 +3179,55 @@ function buildReportBlob() {
 // ========== ميزة لصق صف المدارس وتوزيعها على الأيام ==========
 let pendingPastedSchools = [];
 
-// نافذة اللصق اليدوي: تُوزَّع تلقائيًا فور اللصق (بدون أي زر إضافي)
+// نافذة لصق متوافقة مع SharePoint Embed:
+// لا نحاول قراءة الحافظة برمجيًا؛ نلتقط النص فقط من حدث اللصق الذي ينفّذه المستخدم.
 function openPasteRowModal() {
-  document.getElementById('pasteRowArea').value = '';
+  const area = document.getElementById('pasteRowArea');
+  area.value = '';
   document.getElementById('pastePreview').style.display = 'none';
   document.getElementById('distributeBtn').disabled = true;
-  document.getElementById('pasteTargetMonth').textContent = 
+  document.getElementById('pasteTargetMonth').textContent =
     `${ARABIC_MONTHS[currentMonth]} ${currentYear}`;
   pendingPastedSchools = [];
   document.getElementById('pasteRowModal').classList.add('open');
 
-  const area = document.getElementById('pasteRowArea');
-  setTimeout(() => area.focus(), 150);
+  // ضع المؤشر مباشرة في مربع اللصق حتى لا يحتاج المستخدم إلا Ctrl+V.
+  setTimeout(() => area.focus({ preventScroll: true }), 150);
 
-  // توزيع تلقائي فور اللصق
-  area.onpaste = () => {
-    setTimeout(() => {
-      const parsed = parsePastedRow(area.value);
-      if (parsed.length > 0) {
-        pendingPastedSchools = parsed;
-        distributePastedRow();
+  // المسار الأساسي: قراءة النص من ClipboardEvent نفسه.
+  // هذا لا يستخدم navigator.clipboard، لذلك يعمل بصورة أفضل داخل iframe في SharePoint.
+  area.onpaste = (event) => {
+    const clipboard = event.clipboardData || window.clipboardData;
+    const text = clipboard ? clipboard.getData('text/plain') : '';
+
+    if (text && text.trim()) {
+      // نتحكم بالقيمة يدويًا حتى تكون المعاينة والبيانات متطابقتين.
+      event.preventDefault();
+      area.value = text;
+
+      const parsed = parsePastedRow(text);
+      if (parsed.length === 0) {
+        showToast('⚠️ لم أتمكن من قراءة صف المدارس من النص الملصق', 'error');
+        return;
       }
-    }, 250);
+
+      pendingPastedSchools = parsed;
+      distributePastedRow();
+      return;
+    }
+
+    // إذا لم يوفّر المتصفح clipboardData، اترك اللصق الطبيعي يحدث؛
+    // وسيعالجه oninput أدناه كمسار احتياطي.
   };
-  // للجوال: بعض المتصفحات لا تُطلق حدث paste
+
+  // مسار احتياطي للّصق من قائمة السياق/الجوال وبعض البيئات المضمّنة.
   area.oninput = debounce(() => {
     const parsed = parsePastedRow(area.value);
     if (parsed.length > 0) {
       pendingPastedSchools = parsed;
       distributePastedRow();
     }
-  }, 800);
+  }, 500);
 }
 
 function debounce(fn, ms) {
@@ -3221,76 +3236,6 @@ function debounce(fn, ms) {
     if (t) clearTimeout(t);
     t = setTimeout(() => fn(...args), ms);
   };
-}
-
-// ========== لصق فوري وتوزيع في خطوة واحدة ==========
-// قراءة الحافظة بكل الطرق الممكنة
-async function readClipboardText() {
-  // 1) واجهة readText الحديثة
-  try {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      const t = await navigator.clipboard.readText();
-      if (t && t.trim()) return t;
-    }
-  } catch (e) { console.warn('readText فشل:', e); }
-  // 2) واجهة read() مع ClipboardItem
-  try {
-    if (navigator.clipboard && navigator.clipboard.read) {
-      const items = await navigator.clipboard.read();
-      for (const item of items) {
-        if (item.types.includes('text/plain')) {
-          const blob = await item.getType('text/plain');
-          const t = await blob.text();
-          if (t && t.trim()) return t;
-        }
-      }
-    }
-  } catch (e) { console.warn('read() فشل:', e); }
-  return null;
-}
-
-// لصق عبر textarea خفي + execCommand (يعمل مع file:// في كروم/إيدج)
-function legacyClipboardPaste() {
-  return new Promise((resolve) => {
-    const ta = document.createElement('textarea');
-    ta.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:1px;opacity:0.01;z-index:99999;';
-    document.body.appendChild(ta);
-    ta.focus({ preventScroll: true });
-    let ok = false;
-    try { ok = document.execCommand('paste'); } catch (e) { ok = false; }
-    const text = ta.value || '';
-    document.body.removeChild(ta);
-    resolve(ok ? text : null);
-  });
-}
-
-async function instantPasteDistribute() {
-  let text = await readClipboardText();
-
-  // الطريقة القديمة إن فشلت الحديثة
-  if (!text || !text.trim()) {
-    try {
-      const legacy = await legacyClipboardPaste();
-      if (legacy && legacy.trim()) text = legacy;
-    } catch (e) {
-      console.warn('فشل اللصق الاحتياطي:', e);
-    }
-  }
-
-  // الملاذ الأخير: نافذة لصق واحدة تُوزَّع تلقائيًا فور اللصق
-  if (!text || !text.trim()) {
-    openPasteRowModal();
-    showToast('🔒 المتصفح منع القراءة التلقائية — الصق الصف وسيُوزَّع فورًا', 'error');
-    return;
-  }
-
-  const parsed = parsePastedRow(text);
-  if (parsed.length === 0) {
-    showToast('⚠️ الحافظة فارغة أو المحتوى غير صالح', 'error');
-    return;
-  }
-  pendingPastedSchools = parsed;
-  distributePastedRow();
 }
 
 function parsePastedRow(text) {
@@ -3484,7 +3429,7 @@ function markTodayChip() {
   applyTheme(savedTheme || (systemDark ? 'dark' : 'light'));
 
   // تنبيه عند تحديث التطبيق لنسخة جديدة
-  const APP_VERSION = '5.8';
+  const APP_VERSION = '5.8.1';
   if (localStorage.getItem('vr_app_version') !== APP_VERSION) {
     localStorage.setItem('vr_app_version', APP_VERSION);
     setTimeout(() => showToast(`✨ تم تحديث التطبيق إلى v${APP_VERSION}`, 'success'), 1200);
